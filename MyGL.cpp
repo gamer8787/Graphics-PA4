@@ -1,11 +1,11 @@
-#include "MyGL.h"
+Ôªø#include "MyGL.h"
 #include <glm/gtc/matrix_access.hpp>
 #include <algorithm>
 //------------------------------------------------------------------------------
 MyGL::MyGL()
-    :
-    _doTriangulate( false ),
-    _doRasterize( false ) {
+	:
+	_doTriangulate(false),
+	_doRasterize(false) {
 }
 
 //------------------------------------------------------------------------------
@@ -13,20 +13,20 @@ MyGL::~MyGL()
 {}
 
 //------------------------------------------------------------------------------
-bool MyGL::TriangulatePolygon( const vector<GLVertex> &polygonVerts,
-                               vector<GLVertex> &triangleVerts ) {
-    if( !_doTriangulate )
-        return false;
+bool MyGL::TriangulatePolygon(const vector<GLVertex>& polygonVerts,
+	vector<GLVertex>& triangleVerts) {
+	if (!_doTriangulate)
+		return false;
 
-    //
-    // YOUR CODE HERE
-    //
+	//
+	// YOUR CODE HERE
+	//
 
-    // Implement triangulation here.
-    // Keep in mind that the color of the first scene (F1) will depend on your implementation.
-    // You must set it right so that it should not feel so "glitchy".
+	// Implement triangulation here.
+	// Keep in mind that the color of the first scene (F1) will depend on your implementation.
+	// You must set it right so that it should not feel so "glitchy".
 
-    // just make a triangle out of the first three vertices for now
+	// just make a triangle out of the first three vertices for now
 
 	if (polygonVerts.size() >= 3) {
 		/*
@@ -43,8 +43,8 @@ bool MyGL::TriangulatePolygon( const vector<GLVertex> &polygonVerts,
 
 	}
 	else {
-        return true;
-    }
+		return true;
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ bool MyGL::RasterizeTriangle(GLVertex verts[3]) {
 	double edge[3][3];
 	for (int k = 0; k < 3; k++) {
 		edge[k][0] = verts[k].position[1] - verts[(k + 1) % 3].position[1];
-		edge[k][1] = verts[k].position[0] - verts[(k + 1) % 3].position[0];
+		edge[k][1] = verts[(k + 1) % 3].position[0] - verts[k].position[0];
 		edge[k][2] = verts[k].position[0] * verts[(k + 1) % 3].position[1] - verts[(k + 1) % 3].position[0] * verts[k].position[1];
 	}
 	double area = 0.5 * (edge[0][2] + edge[1][2] + edge[2][2]);
@@ -75,15 +75,16 @@ bool MyGL::RasterizeTriangle(GLVertex verts[3]) {
 		depth[i] = 1 / (2 * area) * (verts[0].position[2] * edge[0][i] + verts[1].position[2] * edge[1][i] + verts[2].position[2] * edge[2][i]);
 	}
 	double xmax = std::max(verts[0].position[0], std::max(verts[1].position[0], verts[2].position[0]));
-	double xmin = std::min(verts[0].position[0], std::max(verts[1].position[0], verts[2].position[0]));
+	double xmin = std::min(verts[0].position[0], std::min(verts[1].position[0], verts[2].position[0]));
 	double ymax = std::max(verts[0].position[1], std::max(verts[1].position[1], verts[2].position[1]));
-	double ymin = std::min(verts[0].position[1], std::max(verts[1].position[1], verts[2].position[1]));
+	double ymin = std::min(verts[0].position[1], std::min(verts[1].position[1], verts[2].position[1]));
 	for (int x = xmin; x <= xmax; x++) {
 		for (int y = ymin; y <= ymax; y++) {
 			double Exy[3];
 			for (int i = 0; i < 3; i++) {
 				Exy[i] = edge[i][0] * x + edge[i][1] * y + edge[i][2];
 			}
+	
 			bool t[3];
 			for (int j = 0; j < 3; j++) {
 				if (edge[j][0] != 0) {
@@ -95,11 +96,11 @@ bool MyGL::RasterizeTriangle(GLVertex verts[3]) {
 			}
 			int triangle = 0;
 			for (int i = 0; i < 3; i++) {
-				if ((Exy[i] > 0) || t[i]) {
+				if ((Exy[i] > 0) || (Exy[i] == 0 && t[i])) {
 					triangle++;
 				}
 			}
-			if (triangle == 3) { //ªÔ∞¢«¸ æ»ø° ¿÷¿Ω
+			if (triangle == 3) { //ÏÇºÍ∞ÅÌòï Ïïà
 				glm::vec4 color;
 				if (textureEnabled) {
 					if (texture.id != 0) {
@@ -120,7 +121,6 @@ bool MyGL::RasterizeTriangle(GLVertex verts[3]) {
 						frameBuffer.SetDepth(x, y, z);
 						frameBuffer.SetPixel(x, y, color);
 					}
-					
 				}
 				else {
 					frameBuffer.SetPixel(x, y, color);
@@ -153,9 +153,8 @@ bool MyGL::RasterizeTriangle(GLVertex verts[3]) {
 	}
 	*/
 
-	
+
 
 
 	return true;
 }
-
